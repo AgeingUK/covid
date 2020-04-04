@@ -38,7 +38,7 @@ lines=grab_data()
 
 pops={'United Kingdom':66000,'France':65000,'Germany':82000,'Italy':59000,'Spain':46000,
 'NLD':17000, 'US':327000,'BEL':11400,'CHN':1380000,'Belgium':11400,
-"Japan":127000, "Korea, South":52000}
+"Japan":127000, "Korea, South":52000,"Iceland":364,"Sweden":10400}
 Jan=31
 Feb=29
 yet=Jan+10
@@ -71,7 +71,7 @@ def plot_country(country, symbol='ko'):
 	if country=="United Kingdom":
 		a=1 #dummy
 		#gbrx.append(max(gbrx)+1)
-		#gbry.append(1025/pops[country])
+		#gbry.append((2921+684)/pops[country])
 	plt.plot(gbrx,gbry,symbol)
 	return [zero,gbry]
 
@@ -81,22 +81,23 @@ countries=['US','France',
 #'Korea, South',
 'Belgium',
 'Germany',
+'Sweden',
 'Spain',
 'United Kingdom']
 
-sym=['yD-','bD-','gs-','gD-','kD-','k^-','bo-','ro-'] #,'bo','ro']
+sym=['yD-','bD-','gs-','gD-','kD-','k^-','c^-','bo-','ro-'] #,'bo','ro']
 for i,c in enumerate(countries):
 	[zero,deaths]=plot_country(c, symbol=sym[i])
 	#print(c)
 	if c in ["Italy","Spain","Belgium"]:
 		plt.scatter(locks[c]-zero,deaths[locks[c]-zero],s=100,facecolors="none",
 		edgecolors='k')
-		plt.vlines(locks[c]-zero,0,0.025)	
+		plt.vlines(locks[c]-zero,0,0.05)	
 		#plt.hlines([422,463],0,30)
 	if c in ["United Kingdom","France"]:
 		plt.scatter(locks[c]-zero,deaths[locks[c]-zero],s=100,facecolors="none",
 		edgecolors='k')
-		plt.vlines(locks[c]-zero,0,0.022)
+		plt.vlines(locks[c]-zero,0,0.043)
 		
 	
 plt.legend(countries,loc='upper left')
@@ -110,14 +111,20 @@ if context==True:
 	plt.plot(gbrx,[10*(el+1)/365 for el in gbrx],'k',linewidth=5)
 	plt.text(8,0.02, 'Death rates for \npeep testing COVID +ve', fontsize=15,
 	rotation=40, rotation_mode='anchor', color='red')		
-plt.text(1,0.022, 'Lockdown points circled for \nBelgium,     Spain, Italy,  France\n                                           UK', fontsize=12,
+plt.text(1,0.045, 'Lockdown points circled for \nBelgium, Spain, Italy, France\n                                     UK', fontsize=12,
 rotation=0, rotation_mode='anchor', color='k')		
-		
+l=0
+r=40
+#plt.hlines(17260/pops['United Kingdom'],l,r,colors='r', linestyles='dashed')	
+plt.hlines(26408/pops['United Kingdom'],l,r,'r')		
+#plt.hlines(18768/pops['United Kingdom'],l,r,colors='r', linestyles='dashed')		
+flu='UK flu associate deaths, 2017/2018 (ONS data))'	
+plt.text(15,26408/pops['United Kingdom']+0.01,flu,color='r')														
 plt.xlabel('Day since 5th death testing positive')
 plt.ylabel('Cumulative fatalities of people testing COVID +ve; per 1000 pop')
 plt.title('Data from John Hopkins Date: '+ today)
-plt.ylim([0,maxy+0.02])
-plt.xlim(0,35)
+plt.ylim([0,0.5])
+plt.xlim(0,40)
 filename='covidpop'+today+'.png'
 plt.savefig(filename,dpi=300)
 plt.show()
