@@ -118,8 +118,14 @@ r=40
 #plt.hlines(17260/pops['United Kingdom'],l,r,colors='r', linestyles='dashed')	
 plt.hlines(26408/pops['United Kingdom'],l,r,'r')		
 #plt.hlines(18768/pops['United Kingdom'],l,r,colors='r', linestyles='dashed')		
-flu='UK flu associate deaths, 2017/2018 (ONS data))'	
-plt.text(15,26408/pops['United Kingdom']+0.01,flu,color='r')														
+'''
+Table 7
+https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/839350/Surveillance_of_influenza_and_other_respiratory_viruses_in_the_UK_2018_to_2019-FINAL.pdf
+
+oops normalised forUK NOT England!
+'''
+flu='Englnd flu associated deaths, 2017/2018 (ONS data))'	
+plt.text(14,26408/pops['United Kingdom']+0.01,flu,color='r')														
 plt.xlabel('Day since 5th death testing positive')
 plt.ylabel('Cumulative fatalities of people testing COVID +ve; per 1000 pop')
 plt.title('Data from John Hopkins Date: '+ today)
