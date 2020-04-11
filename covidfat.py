@@ -38,7 +38,8 @@ lines=grab_data()
 
 pops={'United Kingdom':66000,'France':65000,'Germany':82000,'Italy':59000,'Spain':46000,
 'NLD':17000, 'US':327000,'BEL':11400,'CHN':1380000,'Belgium':11400,
-"Japan":127000, "Korea, South":52000,"Iceland":364,"Sweden":10400}
+"Japan":127000, "Korea, South":52000,"Iceland":364,"Sweden":10400,
+"Austria":8822, "Denmark":5600, "England":56000}
 Jan=31
 Feb=29
 yet=Jan+10
@@ -71,20 +72,28 @@ def plot_country(country, symbol='ko'):
 	if country=="United Kingdom":
 		a=1 #dummy
 		#gbrx.append(max(gbrx)+1)
-		#gbry.append((2921+684)/pops[country])
+		#gbry.append(max(gbry)+953/pops[country])
 	plt.plot(gbrx,gbry,symbol)
 	return [zero,gbry]
-
-countries=['US','France',
-'Italy',
-'Japan',
-#'Korea, South',
-'Belgium',
-'Germany',
-'Sweden',
-'Spain',
-'United Kingdom']
-
+all=True
+if all==True:
+	countries=['US','France',
+	'Italy',
+	'Japan',
+	#'Korea, South',
+	'Belgium',
+	'Germany',
+	'Sweden',
+	'Spain',
+	'United Kingdom']
+else:
+	countries=['France',
+	'Italy',
+	'Belgium',
+	'Germany',
+	'Sweden',
+	'Spain',
+	'United Kingdom']
 sym=['yD-','bD-','gs-','gD-','kD-','k^-','c^-','bo-','ro-'] #,'bo','ro']
 for i,c in enumerate(countries):
 	[zero,deaths]=plot_country(c, symbol=sym[i])
@@ -92,15 +101,23 @@ for i,c in enumerate(countries):
 	if c in ["Italy","Spain","Belgium"]:
 		plt.scatter(locks[c]-zero,deaths[locks[c]-zero],s=100,facecolors="none",
 		edgecolors='k')
-		plt.vlines(locks[c]-zero,0,0.05)	
+		plt.vlines(locks[c]-zero,0,0.069)	
 		#plt.hlines([422,463],0,30)
 	if c in ["United Kingdom","France"]:
 		plt.scatter(locks[c]-zero,deaths[locks[c]-zero],s=100,facecolors="none",
 		edgecolors='k')
-		plt.vlines(locks[c]-zero,0,0.043)
-		
-	
-plt.legend(countries,loc='upper left')
+		plt.vlines(locks[c]-zero,0,0.055)
+
+if all==False:
+	newcountries=[]
+	for country in countries:
+		if country != 'Sweden':
+			newcountries.append(country)
+		else:
+			newcountries.append("Sweden (No LockD)")
+	plt.legend(newcountries,loc='upper left')
+else:
+	plt.legend(countries,loc='upper left')		
 context=False 
 if context==True:
 	textstr = '\n'.join(['Usual (typical UK)',
@@ -111,26 +128,26 @@ if context==True:
 	plt.plot(gbrx,[10*(el+1)/365 for el in gbrx],'k',linewidth=5)
 	plt.text(8,0.02, 'Death rates for \npeep testing COVID +ve', fontsize=15,
 	rotation=40, rotation_mode='anchor', color='red')		
-plt.text(1,0.045, 'Lockdown points circled for \nBelgium, Spain, Italy, France\n                                     UK', fontsize=12,
+plt.text(1,0.06, 'Lockdown points circled for \nBelgium, Spain,Italy, France\n                                   UK', fontsize=10,
 rotation=0, rotation_mode='anchor', color='k')		
 l=0
-r=40
+r=100
 #plt.hlines(17260/pops['United Kingdom'],l,r,colors='r', linestyles='dashed')	
-plt.hlines(26408/pops['United Kingdom'],l,r,'r')		
+plt.hlines(26408/pops['England'],l,r,'r')		
 #plt.hlines(18768/pops['United Kingdom'],l,r,colors='r', linestyles='dashed')		
 '''
 Table 7
 https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/839350/Surveillance_of_influenza_and_other_respiratory_viruses_in_the_UK_2018_to_2019-FINAL.pdf
 
-oops normalised forUK NOT England!
+oops normalised forUK NOT England! NOW CORRECTED!!
 '''
-flu='Englnd flu associated deaths, 2017/2018 (ONS data))'	
-plt.text(14,26408/pops['United Kingdom']+0.01,flu,color='r')														
+flu='England flu associated deaths (ONS data) \nWinter of 2017/2018, see links'	
+plt.text(20,26408/pops['England']+0.01,flu,color='r')														
 plt.xlabel('Day since 5th death testing positive')
 plt.ylabel('Cumulative fatalities of people testing COVID +ve; per 1000 pop')
 plt.title('Data from John Hopkins Date: '+ today)
-plt.ylim([0,0.5])
-plt.xlim(0,40)
+plt.ylim([0,0.55])
+plt.xlim(0,50)
 filename='covidpop'+today+'.png'
 plt.savefig(filename,dpi=300)
 plt.show()
