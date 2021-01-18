@@ -2,6 +2,8 @@ import urllib
 from matplotlib import pyplot as plt
 import numpy as np
 from datetime import date
+#icloud>covidpy
+plt.rcParams['axes.facecolor'] = 'white'
 maxy=0
 today = date.today().strftime("%d-%m-%Y")
 JHstart=22
@@ -36,18 +38,23 @@ def get_country(country):
 		
 lines=grab_data()
 
-pops={'United Kingdom':66000,'France':65000,'Germany':82000,'Italy':59000,'Spain':46000,
-'NLD':17000, 'US':327000,'BEL':11400,'CHN':1380000,'Belgium':11400,
-"Japan":127000, "Korea, South":52000,"Iceland":364,"Sweden":10400,
-"Austria":8822, "Denmark":5600, "England":56000}
+pops={'United Kingdom':66,'France':65,'Germany':82,'Italy':59,'Spain':46,
+'Netherlands':17, 'US':327,'BEL':11.400,'CHN':1380,'Belgium':11.400,
+"Japan":127.000, "Korea, South":52.000,"Iceland":0.364,"Sweden":10.400,
+"Austria":8.822, "Denmark":5.600, "England":56.000, "Poland": 38.000,
+"Ireland":4.900,"Brazil":209.000,"Peru":33.000,"Hungary":9.600,"Czechia":10.600,"Slovakia":5.450,"Greece":10.5,"Wales":3.1,"Portugal":10.28}
+for key in pops:    
+	pops[key] /= 1
+
 Jan=31
 Feb=29
 yet=Jan+10
 locks={"Italy":Jan+Feb+5-JHstart, "United Kingdom":Jan+Feb+23-JHstart, "US":yet,"France":Jan+Feb+18-JHstart,"German":yet,"Spain":Jan+Feb+14-JHstart,
 "Belgium":Jan+Feb+18-JHstart, "Japan":yet}
-
-def plot_country(country, symbol='ko'):
+#plt.figure(figsize=(4,4))
+def plot_country(country, symbol='ko', fill='full'):
 	global maxy
+	maxrate=0
 	key=5
 	zero=0
 	data= get_country(country)
@@ -72,41 +79,49 @@ def plot_country(country, symbol='ko'):
 	if country=="United Kingdom":
 		a=1 #dummy
 		#gbrx.append(max(gbrx)+1)
-		#gbry.append(max(gbry)+953/pops[country])
-	plt.plot(gbrx,gbry,symbol)
-	return [zero,gbry]
+		#gbry.append(max(gbry)+(717)/pops[country])
+	plt.plot(gbrx,gbry,symbol, fillstyle=fill)
+	return [zero,gbry,maxrate]
+
 all=True
 if all==True:
-	countries=['US','France',
+	countries=['Germany','France',
 	'Italy',
-	'Japan',
+	'Czechia',
 	#'Korea, South',
 	'Belgium',
-	'Germany',
+	'Netherlands',
 	'Sweden',
 	'Spain',
+	'Poland',
+	'Greece',
+	'Portugal',
 	'United Kingdom']
 else:
 	countries=['France',
 	'Italy',
 	'Belgium',
-	'Germany',
+	'Brazil',
 	'Sweden',
 	'Spain',
 	'United Kingdom']
-sym=['yD-','bD-','gs-','gD-','kD-','k^-','c^-','bo-','ro-'] #,'bo','ro']
+sym=['yD-','bo-','ws-','mD-','gD-','k^-','c^-','bo-','k+','r--','y+-','ro-'] #,'bo','ro']
+fills=['full','none','full','full','full','full','full','full','full','full','full','full']
 for i,c in enumerate(countries):
-	[zero,deaths]=plot_country(c, symbol=sym[i])
+	[zero,deaths,maxrate]=plot_country(c, symbol=sym[i],fill=fills[i])
 	#print(c)
-	if c in ["Italy","Spain","Belgium"]:
-		plt.scatter(locks[c]-zero,deaths[locks[c]-zero],s=100,facecolors="none",
-		edgecolors='k')
-		plt.vlines(locks[c]-zero,0,0.069)	
-		#plt.hlines([422,463],0,30)
-	if c in ["United Kingdom","France"]:
-		plt.scatter(locks[c]-zero,deaths[locks[c]-zero],s=100,facecolors="none",
-		edgecolors='k')
-		plt.vlines(locks[c]-zero,0,0.055)
+	lockdowns=False
+	if lockdowns==True:
+		if c in ["Italy","Spain","Belgium"]:
+			plt.scatter(locks[c]-zero,deaths[locks[c]-zero],s=100,facecolors="none",
+			edgecolors='k')
+			plt.vlines(locks[c]-zero,0,0.2)	
+			#plt.hlines([422,463],0,30)
+		if c in ["United Kingdom","France"]:
+			plt.scatter(locks[c]-zero,deaths[locks[c]-zero],s=100,facecolors="none",
+			edgecolors='k')
+			print(locks[c])
+			plt.vlines(locks[c]-zero,0,0.15)
 
 if all==False:
 	newcountries=[]
@@ -115,9 +130,9 @@ if all==False:
 			newcountries.append(country)
 		else:
 			newcountries.append("Sweden (No LockD)")
-	plt.legend(newcountries,loc='upper left')
+	plt.legend(newcountries,loc='upper left',framealpha=0.5)
 else:
-	plt.legend(countries,loc='upper left')		
+	plt.legend(countries,loc='upper left',framealpha=0.5)		
 context=False 
 if context==True:
 	textstr = '\n'.join(['Usual (typical UK)',
@@ -128,12 +143,13 @@ if context==True:
 	plt.plot(gbrx,[10*(el+1)/365 for el in gbrx],'k',linewidth=5)
 	plt.text(8,0.02, 'Death rates for \npeep testing COVID +ve', fontsize=15,
 	rotation=40, rotation_mode='anchor', color='red')		
-plt.text(1,0.06, 'Lockdown points circled for \nBelgium, Spain,Italy, France\n                                   UK', fontsize=10,
-rotation=0, rotation_mode='anchor', color='k')		
+if lockdowns==True:
+	plt.text(0.6,0.20, 'Lockdown points circled for \nBelgium, Spain,Italy, \n                       France/ UK', fontsize=10,
+	rotation=0, rotation_mode='anchor', color='k')		
 l=0
-r=100
+r=350
 #plt.hlines(17260/pops['United Kingdom'],l,r,colors='r', linestyles='dashed')	
-plt.hlines(26408/pops['England'],l,r,'r')		
+plt.hlines(26408/pops['England'],l,r,'r',linewidth=2)		
 #plt.hlines(18768/pops['United Kingdom'],l,r,colors='r', linestyles='dashed')		
 '''
 Table 7
@@ -142,12 +158,12 @@ https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attac
 oops normalised forUK NOT England! NOW CORRECTED!!
 '''
 flu='England flu associated deaths (ONS data) \nWinter of 2017/2018, see links'	
-plt.text(20,26408/pops['England']+0.01,flu,color='r')														
+plt.text(100,26408/pops['England']+10,flu,color='r',fontweight='bold')														
 plt.xlabel('Day since 5th death testing positive')
-plt.ylabel('Cumulative fatalities of people testing COVID +ve; per 1000 pop')
+plt.ylabel('COVID +ve fatalities per million pop')
 plt.title('Data from John Hopkins Date: '+ today)
-plt.ylim([0,0.55])
-plt.xlim(0,50)
+plt.ylim([0,1800])
+plt.xlim(0,350)
 filename='covidpop'+today+'.png'
 plt.savefig(filename,dpi=300)
 plt.show()
