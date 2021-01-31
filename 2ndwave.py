@@ -42,7 +42,7 @@ pops={'United Kingdom':66,'France':65,'Germany':82,'Italy':59,'Spain':46,
 'Netherlands':17, 'US':327,'BEL':11.400,'CHN':1380,'Belgium':11.400,
 "Japan":127.000, "Korea, South":52.000,"Iceland":0.364,"Sweden":10.400,
 "Austria":8.822, "Denmark":5.600, "England":56.000, "Poland": 38.000,
-"Ireland":4.900,"Brazil":209.000,"Peru":33.000,"Hungary":9.600,"Czechia":10.600,"Slovakia":5.450,"Greece":10.5,"Wales":3.1,"Portugal":10.28,"Luxembourg":0.626}
+"Ireland":4.900,"Brazil":209.000,"Peru":33.000,"Hungary":9.600,"Czechia":10.600,"Slovakia":5.450,"Greece":10.5,"Wales":3.1,"Portugal":10.28,"Luxembourg":0.626,"Norway":5.3}
 for key in pops:    
 	pops[key] /= 1
 
@@ -65,11 +65,10 @@ def plot_country(country, symbol='ko', fill='full'):
 	for i, val in enumerate(data):
 		if val>=key:
 			if off==False:
-				zero=i
+				zero=i+200
 				print(str(country)+" starts day:"+str(i))
 				off=True
 			#to get second wave, change i by 200
-			zero=200
 			if i==200:
 				baseline=val
 			val=val-baseline	
@@ -169,8 +168,8 @@ plt.text(50,26408/pops['England']+10,flu,color='r',fontweight='bold')
 plt.xlabel('Day since 5th death testing c19 positive -200 (to get 2nd wave)')
 plt.ylabel('"2nd" WAVE COVID +ve fatalities per million pop')
 plt.title('"2nd" WAVE Data from John Hopkins: '+ today)
-plt.ylim([0,1400])
-plt.xlim(0,180)
-filename='covidpop'+today+'.png'
+plt.ylim([0,1600])
+plt.xlim(0,150)
+filename='covid2nd'+today+'.png'
 plt.savefig(filename,dpi=300)
 plt.show()
